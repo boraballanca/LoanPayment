@@ -7,9 +7,7 @@ import javax.swing.*;
 import java.text.*;
 
 public class DisplayBox extends JFrame{
-	/**
-	 * 
-	 */
+	
    private static final long serialVersionUID = 1L;
    private int WIDTH=500;
    private int HEIGHT=300;
@@ -30,14 +28,14 @@ public class DisplayBox extends JFrame{
    public DisplayBox(Formulas f)
    {
       formulas=f;
-   /**Creates the Frame where the values are displayed*/
+   //Creates the Frame where the values are displayed
       setTitle("Loan Calculator");
       setSize(WIDTH,HEIGHT);
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
    
       JPanel mainPanel= new JPanel(); //Creates the main panel
    
-   /** Creates three text field where the user types the values*/
+   // Creates three text field where the user types the values
       loanTF= new JTextField(6);
       interestTF= new JTextField(6);
       durationTF= new JTextField(6);
