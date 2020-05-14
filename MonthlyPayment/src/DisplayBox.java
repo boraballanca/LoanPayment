@@ -128,7 +128,6 @@ public class DisplayBox extends JFrame{
          double i= Double.parseDouble(interestTF.getText());
          int y= Integer.parseInt(durationTF.getText());
          int count=1;
-         int month=0;
          int numberOfMonths= y*12;
          double history= p;
          for(month=numberOfMonths; month>=0; month--)
