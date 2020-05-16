@@ -5,9 +5,13 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.text.*;
+import java.util.*;
 
-public class DisplayBox extends JFrame{
-	
+public class DisplayBox extends JFrame 
+{
+	/**
+	 * 
+	 */
    private static final long serialVersionUID = 1L;
    private int WIDTH=500;
    private int HEIGHT=300;
@@ -23,19 +27,22 @@ public class DisplayBox extends JFrame{
    private JPanel topPanel;
    private JPanel outputPanel;
    private String output="";
+   private double principle;
+   private double interest;
+   private int years;
    private Formulas formulas;
    
    public DisplayBox(Formulas f)
    {
       formulas=f;
-   //Creates the Frame where the values are displayed
+   /**Creates the Frame where the values are displayed*/
       setTitle("Loan Calculator");
       setSize(WIDTH,HEIGHT);
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
    
       JPanel mainPanel= new JPanel(); //Creates the main panel
    
-   // Creates three text field where the user types the values
+   /** Creates three text field where the user types the values*/
       loanTF= new JTextField(6);
       interestTF= new JTextField(6);
       durationTF= new JTextField(6);
@@ -87,35 +94,77 @@ public class DisplayBox extends JFrame{
       setBackground(Color.white);
       setVisible(true);
    }
+   //Gets the loan amount (principle) from the TextField and checks its value
+   private double getPrinciple()
+   {
+      try
+      {principle= Double.parseDouble(loanTF.getText());
+         if(principle<=0)
+         {JOptionPane.showMessageDialog(null,"Invalid input (negative or zero): Loan Amount");
+            throw new IllegalArgumentException("Only Positive Numbers allowed!");}
+      }
+      catch(IllegalArgumentException e)
+      {JOptionPane.showMessageDialog(null,"Invalid input: Loan Amount");}
+      return principle;
+   }
+      //Gets the interest rate from the TextField and checks its value
+
+   private double getInterest()
+   {
+      try
+      {
+         interest=Double.parseDouble(interestTF.getText());
+         if(interest<=0)
+         {
+            JOptionPane.showMessageDialog(null,"Invalid input (negative or zero): Interest Rate");
+            throw new IllegalArgumentException("Only Positive Numbers allowed!");
+         }
+      
+      }
+      catch(IllegalArgumentException e)
+      {
+         JOptionPane.showMessageDialog(null,"Invalid input: Interest Rate");
+      }
+      return interest;
+   }
+      //Gets the loan duration (years) from the TextField and checks its value
+
+   private int getYears()
+   {
+      try
+      {
+         years= Integer.parseInt(durationTF.getText());
+         if(years<=0)
+         {JOptionPane.showMessageDialog(null,"Invalid input (negative or zero): Duration");
+            throw new IllegalArgumentException("Only Positive Numbers allowed!");}
+      
+      
+      }
+      catch(IllegalArgumentException e)
+      {
+         JOptionPane.showMessageDialog(null,"Invalid input: Duration");
+      }
+      return years;
+   }
    
-  //The listener method for the first button 
-      private class PaymentButtonListener implements ActionListener
+     //The listener method for the first button 
+   private class PaymentButtonListener implements ActionListener
    {
       public void actionPerformed(ActionEvent e)
       {
-         double p= Double.parseDouble(loanTF.getText());
-         double i= Double.parseDouble(interestTF.getText());
-         int y= Integer.parseInt(durationTF.getText());
-           
-         monthlyPayment= formulas.computeMonthlyPayment(p,i,y);
+         monthlyPayment= formulas.computeMonthlyPayment(getPrinciple(),getInterest(),getYears());
          output= formattingMethod(monthlyPayment);	
-         outputLabel.setText("The monthly payment for your loan is: "+output+" $");
-           
-        	  
+         outputLabel.setText("The monthly payment for your loan is: "+output+" $");  	  
       }
    }
    // The listener method for the second button
    private class InterestButtonListener implements ActionListener
    {
       public void actionPerformed(ActionEvent e)
-      {
-         double p= Double.parseDouble(loanTF.getText());        
-         int y= Integer.parseInt(durationTF.getText());
-                            
-         double interest= (monthlyPayment*y*12)-p;
+      {                 
+         double interest= (monthlyPayment*getYears()*12)-getPrinciple();
          output= formattingMethod(interest);	
-         outputLabel.setText("The total interest paid for your loan is: " +output+" $");
-           
+         outputLabel.setText("The total interest paid for your loan is: " +output+" $");          
       }
    }
    
@@ -124,16 +173,13 @@ public class DisplayBox extends JFrame{
    {
       public void actionPerformed(ActionEvent e)
       {
-         double p= Double.parseDouble(loanTF.getText());
-         double i= Double.parseDouble(interestTF.getText());
-         int y= Integer.parseInt(durationTF.getText());
          int count=1;
          int month;
-         int numberOfMonths= y*12;
-         double history= p;
+         int numberOfMonths= getYears()*12;
+         double history= getPrinciple();
          for(month=numberOfMonths; month>=0; month--)
          {
-            history=((1+(i/12))*history)-monthlyPayment;
+            history=((1+(getInterest()/12))*history)-monthlyPayment;
             output= formattingMethod(history);
             JOptionPane.showMessageDialog(null, "After payment "+count+" there are : "+output+"$ left");                
             System.out.println("After payment "+count+" there are : "+output+"$ left");
